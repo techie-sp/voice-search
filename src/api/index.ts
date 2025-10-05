@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import { ToastService } from "../utils/ToastService";
 
 // Create Axios instance
 const api: AxiosInstance = axios.create({
@@ -31,6 +32,7 @@ api.interceptors.response.use(
       console.warn("[API] Response error:", error.response.status, error.response.data);
     } else {
       console.warn("[API] Network / timeout error:", error.message);
+      ToastService.show("Network error. Please check your connection.");
     }
     return Promise.reject(error);
   }

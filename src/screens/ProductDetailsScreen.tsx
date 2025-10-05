@@ -11,6 +11,7 @@ import { useAppNavigation, useAppRoute } from '../navigation/hooks';
 import { Rating } from '../components/Rating';
 import { AppButton } from '../components/AppButton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Strings } from '../utils/Strings';
 
 
 export default function ProductDetailsScreen() {
@@ -53,26 +54,37 @@ export default function ProductDetailsScreen() {
             </View>
 
             {/* Description */}
-            <Text style={styles.sectionTitle}>Description</Text>
+            <Text style={styles.sectionTitle}>
+                {
+                    Strings.DESCRIPTION
+                }
+            </Text>
             <Text style={styles.description}>{product.description}</Text>
 
             {/* Dimensions */}
-            <Text style={styles.sectionTitle}>Dimensions</Text>
+            <Text style={styles.sectionTitle}>{
+                Strings.DIMENSIONS}</Text>
             <Text style={styles.subText}>
                 {product.dimensions.width} × {product.dimensions.height} × {product.dimensions.depth} cm
             </Text>
 
             {/* Shipping & Warranty */}
-            <Text style={styles.sectionTitle}>Shipping & Warranty</Text>
+            <Text style={styles.sectionTitle}>
+                {Strings.SHIPPING_WARRANTY}
+            </Text>
             <Text style={styles.subText}>{product.shippingInformation}</Text>
             <Text style={styles.subText}>{product.warrantyInformation}</Text>
 
             {/* Return Policy */}
-            <Text style={styles.sectionTitle}>Return Policy</Text>
+            <Text style={styles.sectionTitle}>
+                {Strings.RETURN_POLICY}
+            </Text>
             <Text style={styles.subText}>{product.returnPolicy}</Text>
 
             {/* Tags */}
-            <Text style={styles.sectionTitle}>Tags</Text>
+            <Text style={styles.sectionTitle}>
+                {Strings.TAGS}
+            </Text>
             <View style={styles.tagContainer}>
                 {product.tags.map((tag) => (
                     <View key={tag} style={styles.tag}>
@@ -82,7 +94,9 @@ export default function ProductDetailsScreen() {
             </View>
 
             {/* Reviews */}
-            <Text style={styles.sectionTitle}>Customer Reviews</Text>
+            <Text style={styles.sectionTitle}>
+                {Strings.CUSTOMER_REVIEWS}
+            </Text>
             {product.reviews.length > 0 ? (
                 <FlatList
                     data={product.reviews}
@@ -100,7 +114,9 @@ export default function ProductDetailsScreen() {
                     )}
                 />
             ) : (
-                <Text style={styles.subText}>No reviews yet.</Text>
+                <Text style={styles.subText}>{
+                    Strings.NO_REVIEWS
+                }</Text>
             )}
 
             {/* Add to Cart */}

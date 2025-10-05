@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, Animated, StyleSheet } from 'react-native';
 import { useNetworkContext } from '../context/NetworkContext';
+import { Strings } from '../utils/Strings';
 
 const NoInternetBanner = () => {
 
@@ -22,7 +23,10 @@ const NoInternetBanner = () => {
                 styles.container,
                 { height: heightAnim }
             ]}>
-            <Text style={styles.text}>⚠️ No Internet Connection</Text>
+            <Text style={styles.text}>{
+                Strings.NO_INTERNET
+            }
+            </Text>
         </Animated.View>
     );
 };

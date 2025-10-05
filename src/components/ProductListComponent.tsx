@@ -9,6 +9,7 @@ import { parseVoiceQuery } from "../utils/ParseVoiceQuery";
 import { useAppNavigation } from "../navigation/hooks";
 import { logProductClicked } from "../utils/analytics/FirebaseAnalytics";
 import NoInternetBanner from "./NoInternetBanner";
+import { Strings } from "../utils/Strings";
 
 const width = (Dimensions.get("window").width - 16) / 3;
 
@@ -44,7 +45,11 @@ const ProductListComponent = () => {
     const listFooterComponent = useCallback(() => (
         suggestions.length > 0 ?
             <View style={{ paddingVertical: 16, }}>
-                <Text style={{ marginBottom: 8 }}>Related suggestions</Text>
+                <Text style={{ marginBottom: 8 }}>
+                    {
+                        Strings.RELATED_SUGGESTIONS
+                    }
+                </Text>
                 <FlashList
                     horizontal
                     contentContainerStyle={{ paddingVertical: 8, }}
@@ -53,7 +58,9 @@ const ProductListComponent = () => {
                     renderItem={renderItemHorizontal}
                 />
             </View>
-            : allLoaded ? <Text style={{ textAlign: 'center', padding: 10 }}>No more products</Text> : <Text style={{ textAlign: 'center', padding: 10 }}>Loading...</Text>
+            : allLoaded ? null : <Text style={{ textAlign: 'center', padding: 10 }}>
+                {Strings.LOADING}
+            </Text>
     ), [allLoaded, suggestions])
 
     useImperativeHandle(productContext.searchRef, () => ({

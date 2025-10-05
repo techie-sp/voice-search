@@ -1,4 +1,3 @@
-// ToastMessage.tsx
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, ViewStyle } from "react-native";
 import { ToastService } from "../utils/ToastService";
@@ -45,7 +44,7 @@ const ToastMessage: React.FC = ({
                 ]).start(() => {
                     setData({ message: '' });
                 });
-            }, 1000);
+            }, 2000);
 
             return () => clearTimeout(timer);
         }

@@ -1,12 +1,10 @@
 
 import React from "react"
-import { Button, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SearchBar } from "../components/SearchBar";
 import ProductListComponent from "../components/ProductListComponent";
 import { ProductProvider } from "../context/ProductContext";
-import { logEvent } from "../utils/analytics/FirebaseAnalytics";
-import { ToastService } from "../utils/ToastService";
 
 
 

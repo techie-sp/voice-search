@@ -14,6 +14,8 @@ import LinearGradientBackground from "./LinearGradientBackground";
 import { useVoiceRecognition } from "../hooks/useVoiceRecognition";
 import { useProductContext } from "../context/ProductContext";
 import { logMicTapped } from "../utils/analytics/FirebaseAnalytics";
+import { useNetworkContext } from "../context/NetworkContext";
+import { ToastService } from "../utils/ToastService";
 
 type SearchBarProps = {
     value?: string;
@@ -28,6 +30,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     onChange,
     debounceTime = 400,
 }) => {
+    const { isConnected } = useNetworkContext()
     const insets = useSafeAreaInsets()
     const [text, setText] = useState(value);
     const [focused, setFocused] = useState(false);
@@ -36,11 +39,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     const { searchRef } = useProductContext();
     const voice = useVoiceRecognition({ onSpeechResults: (text) => { searchRef.current?.search(text); } })
     const micStart = useCallback(() => {
+        if (!isConnected) {
+            ToastService.show("No internet connection");
+            return;
+        }
         setText("");
         voice.start();
         // 📊 Analytics logging
         logMicTapped();
-    }, []);
+    }, [isConnected]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {

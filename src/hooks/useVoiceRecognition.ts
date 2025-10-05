@@ -31,7 +31,7 @@ export const useVoiceRecognition = ({ onSpeechResults }: { onSpeechResults?: (qu
         logTranscriptionSuccess(e)
       }),
       VoiceEmitter.addListener('onSpeechError', (e) => {
-        ToastService.show(`Error: ${e}`);
+        ToastService.show(`Voice input timed out. Please try again.`);
         reset()
         setListening(false);
         setError(e.text);

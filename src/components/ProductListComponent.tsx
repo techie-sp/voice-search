@@ -8,6 +8,7 @@ import { useProductContext } from "../context/ProductContext";
 import { parseVoiceQuery } from "../utils/ParseVoiceQuery";
 import { useAppNavigation } from "../navigation/hooks";
 import { logProductClicked } from "../utils/analytics/FirebaseAnalytics";
+import NoInternetBanner from "./NoInternetBanner";
 
 const width = (Dimensions.get("window").width - 16) / 3;
 
@@ -21,6 +22,7 @@ const ProductListComponent = () => {
     const navigation = useAppNavigation();
 
     const productDetailsNavigate = useCallback((product: Product) => {
+        // 📊 Analytics logging
         logProductClicked(product.id.toString(), product.title);
         navigation.navigate('ProductDetailsScreen', { product });
     }, []);
@@ -67,6 +69,7 @@ const ProductListComponent = () => {
 
     return (
         <>
+            <NoInternetBanner />
             <FlashList
                 ItemSeparatorComponent={itemSeparator}
                 contentContainerStyle={styles.listContainer}
@@ -80,6 +83,7 @@ const ProductListComponent = () => {
             />
         </>
     );
+
 };
 
 export default ProductListComponent;

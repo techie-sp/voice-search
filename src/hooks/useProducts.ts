@@ -3,11 +3,13 @@ import { Product } from "../api/types";
 import { getAllProducts, searchProducts } from "../api/productService";
 import { ParsedQuery } from "../utils/ParseVoiceQuery";
 import { logQueryNoResults, logQuerySuccess } from "../utils/analytics/FirebaseAnalytics";
+import { useNetworkStatus } from "./useNetworkStatus";
+import { ToastService } from "../utils/ToastService";
 
 const LIMIT = 30;
 
-
 export const useProducts = () => {
+  const { isConnected } = useNetworkStatus();
   const [products, setProducts] = useState<Product[]>([]);
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const [skip, setSkip] = useState(0);
@@ -16,7 +18,7 @@ export const useProducts = () => {
   const [query, setQuery] = useState<ParsedQuery | null>(null);
 
   const fetchProducts = useCallback(async () => {
-    if (loading || (query && query.keywords)) return; // 🚫 No pagination for search mode
+    if (loading || (query && query.keywords)) return;
 
     setLoading(true);
     try {
@@ -34,6 +36,7 @@ export const useProducts = () => {
       setSkip((prev) => prev + newProducts.length);
     } catch (err) {
       console.error("❌ Failed to load products", err);
+      ToastService.show("Failed to load products");
     } finally {
       setLoading(false);
     }
@@ -84,12 +87,16 @@ export const useProducts = () => {
 
   // 🔄 Handle initial load or search trigger
   useEffect(() => {
+    if (!isConnected) {
+      ToastService.show("No internet connection");
+      return
+    };
     if (query && query.keywords?.length) {
       fetchSearchResults();
     } else {
       fetchProducts();
     }
-  }, [query]);
+  }, [query, isConnected]);
 
   const loadMore = useCallback(() => {
     if (!loading && !allLoaded && !query) fetchProducts();

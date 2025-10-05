@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "350954090643",
+    "project_id": "voice-search-fc1e5",
+    "storage_bucket": "voice-search-fc1e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350954090643:android:a3fb6dfec09f2fff3d1d66",
+        "android_client_info": {
+          "package_name": "com.voicesearch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVZbHWxvu9YJazj-yByHkOXGgWlLSMUk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

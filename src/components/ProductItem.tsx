@@ -5,18 +5,21 @@ import { Product } from "../api/types";
 
 interface ProductItemProps {
   product: Product;
+  size?: {
+    width: number;
+    height: number;
+  };
 }
 
 const { width } = Dimensions.get("window");
-const IMAGE_HEIGHT = (width - 32 - 16) / 2; 
 
-export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
+export const ProductItem: React.FC<ProductItemProps> = ({ product, size }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, size ? { width: size.width, } : {}]}>
 
       <Image source={{ uri: product.thumbnail }} style={styles.image} resizeMode="cover" />
-      
-      <Text style={styles.title} numberOfLines={2}>
+
+      <Text style={styles.title} numberOfLines={1}>
         {product.title}
       </Text>
 
@@ -25,7 +28,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
 
         <View style={styles.ratingContainer}>
           <Ionicons name="star" size={14} color="#FFD700" />
-          <Text style={styles.ratingText}>4.5</Text>
+          <Text style={styles.ratingText}>{product.rating}</Text>
         </View>
       </View>
     </View>
@@ -34,6 +37,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "center",
     marginHorizontal: 8,
     backgroundColor: "white",
     borderRadius: 8,
@@ -45,8 +49,8 @@ const styles = StyleSheet.create({
     elevation: 3, // for Android shadow
   },
   image: {
+    aspectRatio: 1,
     width: "100%",
-    height: IMAGE_HEIGHT, 
     borderRadius: 8,
     marginBottom: 8,
   },

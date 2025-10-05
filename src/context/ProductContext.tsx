@@ -4,6 +4,7 @@ import React from "react";
 type ProductContextType = {
     searchRef: React.RefObject<{
         search: (query: string) => void;
+        reset: () => void;
     } | null>
 } | null
 
@@ -12,6 +13,7 @@ export const ProductContext = React.createContext<ProductContextType>(null);
 export const ProductProvider = ({ children }: { children: React.ReactNode }) => {
     const searchRef = React.useRef<null | {
         search: (query: string) => void;
+        reset: () => void;
     }>(null);
     return (
         <ProductContext.Provider value={{

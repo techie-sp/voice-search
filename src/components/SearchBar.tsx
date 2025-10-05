@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
     View,
     TextInput,
@@ -13,6 +13,7 @@ import MicButton from "./MicButton";
 import LinearGradientBackground from "./LinearGradientBackground";
 import { useVoiceRecognition } from "../hooks/useVoiceRecognition";
 import { useProductContext } from "../context/ProductContext";
+import { logMicTapped } from "../utils/analytics/FirebaseAnalytics";
 
 type SearchBarProps = {
     value?: string;
@@ -34,7 +35,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const { searchRef } = useProductContext();
     const voice = useVoiceRecognition({ onSpeechResults: (text) => { searchRef.current?.search(text); } })
-
+    const micStart = useCallback(() => {
+        setText("");
+        voice.start();
+        // 📊 Analytics logging
+        logMicTapped();
+    }, []);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -98,7 +104,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                     </TouchableOpacity>
                 )}
             </Animated.View>
-            <MicButton {...voice} />
+            <MicButton {...voice} start={micStart} />
         </LinearGradientBackground>
     );
 };

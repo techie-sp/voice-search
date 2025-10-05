@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { requestMicrophonePermission } from '../utils/Permission';
+import { useProductContext } from '../context/ProductContext';
+import { ToastService } from '../utils/ToastService';
+import { logTranscriptionFailed, logTranscriptionSuccess } from '../utils/analytics/FirebaseAnalytics';
 
 const VoiceModule = NativeModules.VoiceModule;
 const VoiceEmitter = new NativeEventEmitter(VoiceModule);
@@ -11,6 +14,7 @@ export const useVoiceRecognition = ({ onSpeechResults }: { onSpeechResults?: (qu
   const [listening, setListening] = useState(false);
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { searchRef } = useProductContext();
 
   useEffect(() => {
     const subs = [
@@ -23,10 +27,16 @@ export const useVoiceRecognition = ({ onSpeechResults }: { onSpeechResults?: (qu
         setListening(false);
         setText(e);
         onSpeechResults?.(e);
+        // 📊 Analytics logging
+        logTranscriptionSuccess(e)
       }),
       VoiceEmitter.addListener('onSpeechError', (e) => {
+        ToastService.show(`Error: ${e}`);
+        reset()
         setListening(false);
         setError(e.text);
+        // 📊 Analytics logging
+        logTranscriptionFailed(e)
       }),
     ];
 
@@ -46,6 +56,7 @@ export const useVoiceRecognition = ({ onSpeechResults }: { onSpeechResults?: (qu
   const stop = () => VoiceModule.stopListening();
 
   const reset = () => {
+    searchRef.current?.reset()
     stop();
     setText('');
     setError(null);

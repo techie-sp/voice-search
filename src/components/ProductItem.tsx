@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import { Ionicons } from '@react-native-vector-icons/ionicons';
 import { Product } from "../api/types";
 
 interface ProductItemProps {
@@ -23,7 +24,7 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
         <Text style={styles.price}>${product.price}</Text>
 
         <View style={styles.ratingContainer}>
-          {/* <Ionicons name="star" size={14} color="#FFD700" /> */}
+          <Ionicons name="star" size={14} color="#FFD700" />
           <Text style={styles.ratingText}>4.5</Text>
         </View>
       </View>

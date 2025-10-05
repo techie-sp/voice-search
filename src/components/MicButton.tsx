@@ -1,15 +1,17 @@
 import { Ionicons } from "@react-native-vector-icons/ionicons";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Pressable, Animated, StyleSheet, View } from "react-native";
+import type { VoiceRecognition } from "../hooks/useVoiceRecognition";
 
 
-const MicButton = ({ onPress }: { onPress?: () => void }) => {
-    const [isRecording, setIsRecording] = useState(false);
+const MicButton = ({ listening, start: voiceStart, stop: voiceStop }: VoiceRecognition) => {
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const pulseAnim = useRef(new Animated.Value(0)).current;
 
+
+
     useEffect(() => {
-        if (isRecording) {
+        if (listening) {
             // Start pulsing background
             Animated.loop(
                 Animated.sequence([
@@ -29,11 +31,14 @@ const MicButton = ({ onPress }: { onPress?: () => void }) => {
             pulseAnim.stopAnimation();
             pulseAnim.setValue(0);
         }
-    }, [isRecording]);
+    }, [listening]);
 
     const handlePress = () => {
-        setIsRecording(!isRecording);
-        onPress?.();
+        if (listening) {
+            voiceStop();
+        } else {
+            voiceStart();
+        }
     };
 
     const pulseScale = pulseAnim.interpolate({
@@ -49,7 +54,7 @@ const MicButton = ({ onPress }: { onPress?: () => void }) => {
     return (
         <Pressable onPress={handlePress} style={styles.wrapper}>
             <View style={styles.center}>
-                {isRecording && (
+                {listening && (
                     <Animated.View
                         style={[
                             styles.pulse,
@@ -63,14 +68,14 @@ const MicButton = ({ onPress }: { onPress?: () => void }) => {
                 <Animated.View
                     style={[
                         styles.iconContainer,
-                        isRecording ? styles.recording : styles.idle,
+                        listening ? styles.recording : styles.idle,
                         { transform: [{ scale: scaleAnim }] },
                     ]}
                 >
                     <Ionicons
-                        name={isRecording ? "stop-circle" : "mic-outline"}
+                        name={listening ? "stop-circle" : "mic-outline"}
                         size={26}
-                        color={isRecording ? "#fff" : "#555"}
+                        color={listening ? "#fff" : "#555"}
                     />
                 </Animated.View>
             </View>

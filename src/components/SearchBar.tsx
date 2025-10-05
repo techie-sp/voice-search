@@ -10,6 +10,10 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from '@react-native-vector-icons/ionicons';
 import MicButton from "./MicButton";
+import LinearGradientBackground from "./LinearGradientBackground";
+import { useVoiceRecognition } from "../hooks/useVoiceRecognition";
+import { useProductContext } from "../context/ProductContext";
+
 type SearchBarProps = {
     value?: string;
     placeholder?: string;
@@ -28,8 +32,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     const [focused, setFocused] = useState(false);
 
     const scaleAnim = useRef(new Animated.Value(1)).current;
+    const { searchRef } = useProductContext();
+    const voice = useVoiceRecognition({ onSpeechResults: (text) => { searchRef.current?.search(text); } })
 
-    // Debounce user input
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             onChange?.(text);
@@ -37,7 +43,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         return () => clearTimeout(timeout);
     }, [text]);
 
-    // Small focus animation
+
     const animateFocus = (toValue: number) => {
         Animated.timing(scaleAnim, {
             toValue,
@@ -48,7 +54,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     };
 
     return (
-        <View style={{ paddingHorizontal: 16, columnGap: 12, backgroundColor: 'green', paddingTop: insets.top, flexDirection: 'row', alignItems: 'center' }}>
+        <LinearGradientBackground
+            style={{ paddingTop: insets.top, ...styles.background }}
+            colors={['#828a19ff', '#bdbaa0ff',]}
+            direction="top-to-bottom"
+        >
             <Animated.View
                 style={[
                     styles.container,
@@ -63,7 +73,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                     style={styles.input}
                     placeholder={placeholder}
                     placeholderTextColor="#aaa"
-                    value={text}
+                    value={text || voice.text}
                     onFocus={() => {
                         setFocused(true);
                         animateFocus(1.03);
@@ -74,19 +84,34 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                     }}
                     onChangeText={setText}
                     returnKeyType="search"
+                    onSubmitEditing={() => {
+                        searchRef.current?.search(text);
+                    }}
                 />
-                {text.length > 0 && (
-                    <TouchableOpacity onPress={() => setText("")}>
+                {(text.length > 0 || voice.text.length > 0) && (
+                    <TouchableOpacity onPress={() => {
+                        voice.reset()
+                        setText("")
+                        searchRef.current?.search("");
+                    }}>
                         <Ionicons name="close-circle" size={20} color="#999" />
                     </TouchableOpacity>
                 )}
             </Animated.View>
-            <MicButton />
-        </View>
+            <MicButton {...voice} />
+        </LinearGradientBackground>
     );
 };
 
 const styles = StyleSheet.create({
+    background: {
+        paddingHorizontal: 16,
+        columnGap: 12,
+        paddingBottom: 4,
+        backgroundColor: 'green',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     container: {
         flex: 1,
         flexDirection: "row",

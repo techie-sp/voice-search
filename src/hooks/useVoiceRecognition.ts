@@ -5,7 +5,9 @@ import { requestMicrophonePermission } from '../utils/Permission';
 const VoiceModule = NativeModules.VoiceModule;
 const VoiceEmitter = new NativeEventEmitter(VoiceModule);
 
-export const useVoiceRecognition = () => {
+export type VoiceRecognition = { text: string; listening: boolean; error: string | null; start: () => void; stop: () => void, reset: () => void; };
+
+export const useVoiceRecognition = ({ onSpeechResults }: { onSpeechResults?: (query: string) => void }) => {
   const [listening, setListening] = useState(false);
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -16,9 +18,11 @@ export const useVoiceRecognition = () => {
       VoiceEmitter.addListener('onSpeechPartial', (e) => {
         setText(e)
       }),
-      VoiceEmitter.addListener('onSpeechResult', (e) => {
+      VoiceEmitter.addListener('onSpeechResults', (e) => {
+        console.log("Final results: ", e);
         setListening(false);
         setText(e);
+        onSpeechResults?.(e);
       }),
       VoiceEmitter.addListener('onSpeechError', (e) => {
         setListening(false);
@@ -35,11 +39,17 @@ export const useVoiceRecognition = () => {
       console.warn("Microphone permission denied");
       return;
     }
-    setListening(true);
-    VoiceModule.startListening();
+    setListening(true)
+    VoiceModule.startListening()
   };
 
   const stop = () => VoiceModule.stopListening();
 
-  return { text, listening, error, start, stop };
+  const reset = () => {
+    stop();
+    setText('');
+    setError(null);
+  }
+
+  return { text, listening, error, start, stop, reset } as VoiceRecognition;
 };

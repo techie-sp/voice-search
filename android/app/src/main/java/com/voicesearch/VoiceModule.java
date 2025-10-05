@@ -62,7 +62,7 @@ public class VoiceModule extends ReactContextBaseJavaModule {
 
                     @Override
                     public void onError(int error) {
-                        sendEvent("onSpeechError", "Error code: " + error);
+                        sendEvent("onSpeechError", "" + error);
                     }
 
                     @Override
@@ -89,7 +89,6 @@ public class VoiceModule extends ReactContextBaseJavaModule {
             recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-            recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN"); // or auto-detect
 
             speechRecognizer.startListening(recognizerIntent);
         });

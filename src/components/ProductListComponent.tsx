@@ -11,6 +11,7 @@ import { logProductClicked } from "../utils/analytics/FirebaseAnalytics";
 import NoInternetBanner from "./NoInternetBanner";
 import { Strings } from "../utils/Strings";
 import QueryTags from "./QueryTags";
+import NoResultFound from "./NoResultFound";
 
 const width = (Dimensions.get("window").width - 16) / 3;
 
@@ -19,7 +20,7 @@ const keyExtractor = (item: Product) => item.id.toString();
 const itemSeparator = () => <View style={{ height: 16 }} />
 
 const ProductListComponent = () => {
-    const { products, loadMore, allLoaded, search, suggestions, reset: voiceReset, query } = useProducts();
+    const { products, loadMore, allLoaded, search, suggestions, reset: voiceReset, query, loading } = useProducts();
     const productContext = useProductContext();
     const navigation = useAppNavigation();
 
@@ -101,6 +102,11 @@ const ProductListComponent = () => {
     const ListHeaderComponent = useCallback(() => (query ?
         (<QueryTags query={query} />) : null), [query]);
 
+    const ListEmptyComponent = useCallback(() => (
+        
+        suggestions.length == 0 && finalProducts.otherProduct.length == 0 && !loading? <NoResultFound />  : null
+    ), [suggestions, finalProducts.otherProduct, loading]);
+
     useImperativeHandle(productContext.searchRef, () => ({
         reset: () => {
             voiceReset();
@@ -119,6 +125,7 @@ const ProductListComponent = () => {
             <FlashList
                 ListHeaderComponent={ListHeaderComponent}
                 ItemSeparatorComponent={itemSeparator}
+                ListEmptyComponent={ListEmptyComponent}
                 contentContainerStyle={styles.listContainer}
                 data={finalProducts.mainProduct}
                 numColumns={2}

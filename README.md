@@ -1,97 +1,97 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🎤 Voice-to-Text Product Search (React Native)
 
-# Getting Started
+This project implements a **voice-based product search feature** for an e-commerce app using **React Native**.  
+Users can search for products by speaking instead of typing, with real-time transcription, smart query parsing, and analytics tracking.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🚀 Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### 🎙️ Voice Recognition
+- Implemented using **React Native’s SpeechRecognizer API** (Android).
+- Supports **real-time partial transcription** — live updates of recognized text in the search box.
+- Handles **multi-language input** (English + Hindi mix).
+- Filters **background noise** and avoids false triggers.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 🔍 Search Flow
+1. When the mic icon is tapped:
+   - Fetches the full product list from **DummyJSON API** (`https://dummyjson.com/products`).
+2. After speech recognition completes:
+   - Parses the spoken query into structured parameters like:
+     ```ts
+     {
+       brand?: string;
+       color?: string;
+       category?: string;
+       price?: { operator: '<' | '>' | '='; value: number };
+     }
+     ```
+   - Example:  
+     _“Show me black Nike shoes under 5000”_ →  
+     `{ brand: "Nike", color: "black", category: "shoes", price: { operator: '<', value: 5000 } }`
+3. The parsed query is used with the **DummyJSON Search API**:  
+   `https://dummyjson.com/products/search?q=<query>`
 
-```sh
-# Using npm
-npm start
+### 🤖 Smart Handling
+- **Multi-language support** (English + Hindi mix).
+- **Fallback suggestions** for no results (e.g., “Did you mean phones?”).
+- **Error handling** for no internet, API failure, or speech timeout.
 
-# OR using Yarn
-yarn start
-```
+### 📊 Firebase Analytics
+- Integrated **Firebase Analytics** to log key user actions:
+  - Mic tapped
+  - Successful / failed transcription
+  - Query success / no results
+  - Product clicked
 
-## Step 2: Build and run your app
+- A **screenshot of logged Firebase events** is included in the repository under `/assets/firebase-logs.png`.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+---
 
-### Android
+## ⚙️ Platform Note
+Since this project was developed on a **Windows environment**,  
+the implementation is currently **tested and optimized for Android only**.
 
-```sh
-# Using npm
-npm run android
+---
 
-# OR using Yarn
-yarn android
-```
+## 📦 Tech Stack
 
-### iOS
+- **React Native** (with TypeScript)
+- **Firebase Analytics**
+- **DummyJSON API**
+- **SpeechRecognizer API (Android)**
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+---
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## 🧪 How to Run
 
-```sh
-bundle install
-```
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/voice-to-text-product-search.git
+   cd voice-to-text-product-search
 
-Then, and every time you update your native dependencies, run:
+2️⃣ Install Dependencies
+npm install or
+yarn install
 
-```sh
-bundle exec pod install
-```
+3️⃣ Run the App on Android
+npx react-native run-android
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+4️⃣ Requirements
 
-```sh
-# Using npm
-npm run ios
+Enable microphone permission.
 
-# OR using Yarn
-yarn ios
-```
+Ensure internet access for API and Firebase calls.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+🎥 Demo Video
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+A demo video of the complete flow is attached in the submission email.
+It demonstrates:
 
-## Step 3: Modify your app
+Voice recognition in action
 
-Now that you have successfully run the app, let's make changes!
+Real-time transcription
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Product filtering
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Firebase Analytics tracking
